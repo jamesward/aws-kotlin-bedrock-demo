@@ -18,6 +18,7 @@ kotlin {
     sourceSets {
         jvmMain {
             dependencies {
+                implementation("aws.sdk.kotlin:s3:1.2.8")
                 implementation("aws.sdk.kotlin:bedrockruntime:1.2.8")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
                 runtimeOnly("org.slf4j:slf4j-simple:2.0.13")
