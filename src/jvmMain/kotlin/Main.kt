@@ -72,7 +72,7 @@ suspend fun save(s: String): Unit =
         s3.waitUntilBucketExists { bucket = name }
         s3.putObject {
             bucket = name
-            key = "thing"
+            key = "thing.txt"
             body = ByteStream.fromString(s)
         }
     }
