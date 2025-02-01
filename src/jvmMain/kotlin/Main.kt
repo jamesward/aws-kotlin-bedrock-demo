@@ -60,26 +60,22 @@ suspend fun askBedrock(s: String): Message =
         }.body.decodeFromResponse()
     }
 
-suspend fun save(s: String): Unit =
+suspend fun save(s: String): String? =
     S3Client { region = "us-west-2" }.use { s3 ->
         val name = UUID.randomUUID().toString()
-        s3.createBucket {
-            bucket = name
-            createBucketConfiguration {
-                locationConstraint = BucketLocationConstraint.UsWest2
-            }
-        }
+        s3.createBucket { bucket = name }
         s3.waitUntilBucketExists { bucket = name }
         s3.putObject {
             bucket = name
             key = "thing.txt"
             body = ByteStream.fromString(s)
-        }
+        }.versionId
     }
 
 
 suspend fun main() {
     val q = "What is great about Kotlin 2.0?"
     val a = askBedrock(q).content.first().text
-    save(a)
+    val versionId = save(a) ?: "none"
+    println("Saved version: $versionId")
 }

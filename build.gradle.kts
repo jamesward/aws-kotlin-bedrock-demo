@@ -14,6 +14,11 @@ kotlin {
         mainRun {
             mainClass = "MainKt"
         }
+        testRuns.configureEach {
+            executionTask.configure {
+                useJUnitPlatform()
+            }
+        }
     }
 
     sourceSets {
@@ -26,5 +31,29 @@ kotlin {
                 runtimeOnly("org.slf4j:slf4j-simple:2.0.13")
             }
         }
+        jvmTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit5"))
+                implementation("org.junit.jupiter:junit-jupiter-engine:5.10.1")
+                implementation("org.testcontainers:junit-jupiter:1.20.4")
+                implementation("org.testcontainers:testcontainers:1.20.4")
+                implementation("org.testcontainers:localstack:1.20.4")
+            }
+        }
+    }
+}
+
+tasks.withType<AbstractTestTask> {
+    testLogging {
+        showStandardStreams = true
+        showExceptions = true
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        events(
+            org.gradle.api.tasks.testing.logging.TestLogEvent.STARTED,
+            org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+            org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+            org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+        )
     }
 }
